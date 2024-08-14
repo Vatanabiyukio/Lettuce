@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Lettuce.Domain")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+ff72e79561dff5f08dbc7863b0cd482de47bc83e")]
 [assembly: System.Reflection.AssemblyProductAttribute("Lettuce.Domain")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Lettuce.Domain")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
