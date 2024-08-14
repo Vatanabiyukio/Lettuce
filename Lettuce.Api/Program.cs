@@ -1,12 +1,12 @@
-using Lettuce.Domain.Contexts;
-using Microsoft.EntityFrameworkCore;
+using Lettuce.Domain.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddDbContext<MysqlContext>(
-    optionsAction: optionsBuilder => optionsBuilder.UseMySql(builder.Configuration.GetConnectionString("MySqlDefault"), new MySqlServerVersion("9.0.1")));
+/*builder.Services.AddDbContext<MysqlContext>(
+    optionsAction: optionsBuilder => optionsBuilder.UseMySql(builder.Configuration.GetConnectionString("MySql"), new MySqlServerVersion("9.0.1")));*/
+builder.Services.AddScoped<ConsolidationService>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

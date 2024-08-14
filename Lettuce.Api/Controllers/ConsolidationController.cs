@@ -1,10 +1,6 @@
 using System.Text.RegularExpressions;
-using Lettuce.Domain.Contexts;
-using Lettuce.Domain.Entities;
-using Lettuce.Domain.Models;
+using Lettuce.Domain.Services;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using OfficeOpenXml;
 
 namespace Lettuce.Api.Controllers;
 
@@ -14,7 +10,7 @@ public partial class ConsolidationController : ControllerBase
 {
     private readonly ILogger<ConsolidationController> _logger;
     private readonly IServiceProvider _serviceProvider;
-    
+
     public ConsolidationController(ILogger<ConsolidationController> logger, IServiceProvider serviceProvider)
     {
         _logger = logger;
@@ -24,13 +20,15 @@ public partial class ConsolidationController : ControllerBase
     [HttpPut]
     public async Task<IActionResult> UpdateConsolidation()
     {
-        using var scope = _serviceProvider.CreateScope();
+        var consolidationService = _serviceProvider.GetService<ConsolidationService>();
+        var warriorList = consolidationService?.ObterPlanilhaWarrior();
+        /*using var scope = _serviceProvider.CreateScope();
         var mysqlContext = scope.ServiceProvider.GetService<MysqlContext>();
-        
+
         // Obtem as duas tabelas de forma lazy
         var pumpkim = mysqlContext?.Pumpkim ?? throw new InvalidOperationException();
         var warrior = mysqlContext.Warrior ?? throw new InvalidOperationException();
-        
+
         // obtem de pumpkin as linhas que não existem em warrior
         var linhasAusentes = pumpkim
             .Where(p => !warrior
@@ -41,11 +39,11 @@ public partial class ConsolidationController : ControllerBase
         var novosWarriors = linhasAusentes
             .Select(la => (PumpkimModel)la)
             .Select(nw => (WarriorModel)nw);
-        
+
         // Insere as linhas ausentes em warrior
         var localWarriors = await warrior.ToListAsync();
         localWarriors.AddRange(novosWarriors.Select(x => (Warrior)x));
-        
+
         var regex = MyRegex();
         localWarriors.Sort((x, y) =>
         {
@@ -62,13 +60,13 @@ public partial class ConsolidationController : ControllerBase
 
             return 0; // Se não conseguir converter, considera como iguais
         });
-        
+
         // Atualiza warrior a partir de pumpkin
         var localPumpkins = await pumpkim.ToArrayAsync();
 
         var uorsPagadorasSolicitadosParaSevero = new List<int>();
         var uorsPagadorasEnviadosParaOrçamento = new List<int>();
-        
+
         localWarriors.ForEach(lw =>
         {
             var selectedPumpkin = localPumpkins.FirstOrDefault(lp => lp.HostnameDoCircuito == lw.Hostname);
@@ -87,9 +85,9 @@ public partial class ConsolidationController : ControllerBase
             lw.AutorizadoNoCda2808 = selectedPumpkin.AutorizadoNoCda == "VERDADEIRO" ? "SIM" : "NÃO";
             if (lw.EnviadaAMensagemParaAAgência != "SIM")
                 lw.EnviadaAMensagemParaAAgência = "NÃO";
-            
+
             // Salva os dados para consumo posterior
-            if (lw.SolicitadoParaOSevero == "SIM") 
+            if (lw.SolicitadoParaOSevero == "SIM")
                 uorsPagadorasSolicitadosParaSevero.Add(selectedPumpkin.UorPagadora ?? -1);
             if (lw.EnviadaAMensagemParaOOrçamentoDeTi == "SIM")
                 uorsPagadorasEnviadosParaOrçamento.Add(selectedPumpkin.UorPagadora ?? -1);
@@ -97,7 +95,7 @@ public partial class ConsolidationController : ControllerBase
 
         uorsPagadorasSolicitadosParaSevero.RemoveAll(int.IsNegative);
         uorsPagadorasEnviadosParaOrçamento.RemoveAll(int.IsNegative);
-        
+
         localWarriors.ForEach(lw =>
         {
             var selectedPumpkin = localPumpkins.FirstOrDefault(lp => lp.HostnameDoCircuito == lw.Hostname);
@@ -107,7 +105,7 @@ public partial class ConsolidationController : ControllerBase
             lw.EnviadaAMensagemParaOOrçamentoDeTi =
                 uorsPagadorasEnviadosParaOrçamento.Contains(selectedPumpkin.UorPagadora ?? -1) ? "SIM" : "NÃO";
         });
-        
+
         ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
 
         using (var ep = new ExcelPackage(@"/Users/viniciusvatanabi/Downloads/Consolidação_Warrior.xlsx"))
@@ -118,7 +116,7 @@ public partial class ConsolidationController : ControllerBase
             var lastAddress = excelTable.Address.End ?? throw new InvalidDataException();
 
             excelTable.DeleteRow(int.Parse(firstAddress.Row.ToString()) + 1, int.Parse(lastAddress.Row.ToString()) - int.Parse(firstAddress.Row.ToString()) - 4);
-            
+
             foreach (var localWarrior in localWarriors)
             {
                 var rowRange = excelTable.AddRow();
@@ -141,13 +139,14 @@ public partial class ConsolidationController : ControllerBase
             }
 
             await ep.SaveAsync();
-        }
-        
-        return Ok(localWarriors);
+        }*/
+
+        return Ok();
     }
 
     [GeneratedRegex(@"\d{4}$")]
     private static partial Regex MyRegex();
+
     [GeneratedRegex(@"DCZ\d+")]
     private static partial Regex MyRegex1();
 }
