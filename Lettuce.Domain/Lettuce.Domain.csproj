@@ -1,0 +1,31 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="EPPlus" Version="7.2.2" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.7" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.7">
+        <PrivateAssets>all</PrivateAssets>
+        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      </PackageReference>
+      <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="8.0.2" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Remove="Program.cs" />
+      <Compile Remove="Models\ConsolidacaoAutomacaoPumpkin.cs" />
+      <Compile Remove="Models\ConsolidacaoCriacaoIcDcz2022IcDcz.cs" />
+      <Compile Remove="Entities\ConsolidacaoAutomacaoPumpkin.cs" />
+      <Compile Remove="Entities\ConsolidacaoCriacaoIcDcz2022IcDcz.cs" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Entities\" />
+    </ItemGroup>
+
+</Project>
